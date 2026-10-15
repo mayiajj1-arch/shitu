@@ -25,7 +25,7 @@ let extension_settings, renderExtensionTemplateAsync, saveSettingsDebounced, sub
 //   public/scripts/system-messages.js -> /scripts/system-messages.js
 // 手算「../..」层级极易差一级（多退一级会在 /scripts/extensions/ 下找文件而 404，
 // 少退一级会在 /scripts/ 下找），且浏览器与 Node 的 URL 归一化行为并不直观。
-const DEP_VERSION = '1.1.0';
+const DEP_VERSION = '1.1.1';
 
 // ⚠️ 关键：URL 里**绝对不能**带 ?v= 之类的查询串。
 // ES 模块的身份是「完整 URL（含查询串）」。ST 的内置扩展都是这样导入的：
@@ -97,7 +97,21 @@ async function ensureDeps() {
     return __depsPromise;
 }
 
+// 设置存储键：ST 用 extension_settings[MODULE_NAME] 存本扩展的设置（含 API Key）。
+// 这个键**必须保持稳定**，绝不能跟着目录名变——否则换装方式（目录名变了）
+// 就会读不到原来的设置与密钥。
 const MODULE_NAME = 'seedance-prompt-builder';
+
+// 本扩展在 ST 里的目录名，用于取自己的 settings.html。
+// 绝不能硬编码：从 ST 面板一键安装时目录名取自仓库名（例如 shitu），
+// 手动安装时又可能是 seedance-prompt-builder。写死任何一个，另一种装法就会
+// 「Error rendering template」。所以从真实模块 URL 推导。
+const MODULE_DIR = (() => {
+    const m = /\/scripts\/extensions\/(.+)\/[^/]+$/.exec(import.meta.url);
+    if (m) return m[1];
+    console.warn('[seedance] 无法从模块 URL 推导目录名，回退到', `third-party/${MODULE_NAME}`);
+    return `third-party/${MODULE_NAME}`;
+})();
 const DEFAULT_BASE_URL = 'https://api.deepseek.com';
 const DEFAULT_MODEL = 'deepseek-flash';
 
@@ -389,7 +403,12 @@ function injectToChatInput() {
 async function addSettingsPanel() {
     if (document.getElementById('seedance_grab')) return; // 防重复加载
 
-    const html = await renderExtensionTemplateAsync(`third-party/${MODULE_NAME}`, 'settings');
+    const html = await renderExtensionTemplateAsync(MODULE_DIR, 'settings');
+    // 防错：若取到的是别的扩展（或旧残留目录）的模板，宁可报清楚也不静默渲染错的界面
+    if (!html.includes('seedance_settings_root')) {
+        throw new Error(`取到的模板不属于本扩展（目录 ${MODULE_DIR}）。`
+            + '请检查 data/default-user/extensions/ 下是否有多个本扩展的副本。');
+    }
     $('#extensions_settings2').append(html);
 
     bindInput('seedance_base_url', 'baseUrl');
