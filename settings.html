@@ -1,0 +1,54 @@
+<div class="seedance-settings">
+    <div class="inline-drawer">
+        <div class="inline-drawer-toggle inline-drawer-header">
+            <b>场景识别（Seedance 分镜用）</b>
+            <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
+        </div>
+        <div class="inline-drawer-content">
+
+            <div class="seedance-hint">
+                识别聊天里的图 → 得到结构化的场景内容 → 填入聊天框，再由角色结合世界书与剧本写分镜提示词。
+                本扩展只负责识别，不代替角色生成。
+            </div>
+
+            <div class="seedance-row">
+                <label for="seedance_model">视觉模型</label>
+                <input id="seedance_model" class="text_pole flex1" type="text" placeholder="deepseek-flash" />
+            </div>
+
+            <div class="seedance-row">
+                <label for="seedance_base_url">接口地址</label>
+                <input id="seedance_base_url" class="text_pole flex1" type="text" placeholder="https://api.deepseek.com" />
+            </div>
+
+            <div class="seedance-row">
+                <label for="seedance_api_key">API Key</label>
+                <input id="seedance_api_key" class="text_pole flex1" type="password" placeholder="sk-...（必填，存本地 settings.json，只发给 DeepSeek）" />
+            </div>
+
+            <div class="seedance-row">
+                <button id="seedance_grab" class="menu_button">取最后一张图</button>
+                <button id="seedance_recognize" class="menu_button">识别画面</button>
+                <button id="seedance_inject" class="menu_button">填入聊天框</button>
+            </div>
+
+            <div id="seedance_status"></div>
+            <img id="seedance_preview" class="seedance-preview-img" style="display:none" alt="" />
+
+            <label for="seedance_result">场景识别结果（可编辑，再填入聊天框）</label>
+            <textarea id="seedance_result" placeholder="点「识别画面」后，这里出现结构化的场景内容"></textarea>
+
+            <div class="seedance-row">
+                <label for="seedance_prefix">填入聊天框时的前缀</label>
+                <input id="seedance_prefix" class="text_pole flex1" type="text"
+                       placeholder="可留空；例：请据此为这场戏写 Seedance 2.5 的图生视频分镜提示词" />
+            </div>
+
+            <details>
+                <summary>识别提示词（进阶，可自定义）</summary>
+                <textarea id="seedance_vision_prompt"></textarea>
+            </details>
+
+        </div>
+    </div>
+</div>

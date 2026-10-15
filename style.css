@@ -1,0 +1,54 @@
+.seedance-settings .seedance-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 4px 0;
+}
+
+.seedance-settings .seedance-hint {
+    font-size: 0.85em;
+    opacity: 0.7;
+    line-height: 1.35;
+    margin: 4px 0 6px;
+}
+
+.seedance-settings textarea {
+    width: 100%;
+    min-height: 90px;
+    resize: vertical;
+}
+
+.seedance-settings details summary {
+    cursor: pointer;
+    opacity: 0.85;
+}
+
+#seedance_status {
+    font-size: 0.85em;
+    min-height: 1.2em;
+    margin-top: 4px;
+}
+
+#seedance_status.seedance-error {
+    color: var(--red, #e05252);
+}
+
+#seedance_status.seedance-ok {
+    color: var(--green, #4caf50);
+}
+
+#seedance_result {
+    width: 100%;
+    min-height: 140px;
+    resize: vertical;
+    font-family: var(--monoFontFamily, monospace);
+    font-size: 0.85em;
+}
+
+.seedance-preview-img {
+    max-width: 100%;
+    max-height: 140px;
+    border-radius: 6px;
+    margin-top: 4px;
+    object-fit: contain;
+}
